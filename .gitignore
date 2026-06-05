@@ -1,0 +1,19 @@
+# Environment files
+.env
+backend/.env
+
+# Python
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+
+# Node
+extension/node_modules/
+extension/dist/
+
+# Docker
+postgres_data/
+
+# OS
+.DS_Store
+Thumbs.db
