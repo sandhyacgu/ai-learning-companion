@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { speakText, stopSpeech } from '../utils/speech'
 
 interface SummaryPageProps {
   selectedText: string
@@ -8,12 +9,14 @@ function SummaryPage({ selectedText }: SummaryPageProps) {
   const [result, setResult] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  const [playing, setPlaying] = useState(false)
 
   const handleSummary = async () => {
     if (!selectedText) return
     setLoading(true)
     setError('')
     setResult('')
+    setPlaying(false)
 
     try {
       const response = await fetch('http://localhost:8000/api/summary', {
@@ -27,6 +30,16 @@ function SummaryPage({ selectedText }: SummaryPageProps) {
       setError('Backend se connect nahi ho paya!')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleSpeak = () => {
+    if (playing) {
+      stopSpeech()
+      setPlaying(false)
+    } else {
+      speakText(result)
+      setPlaying(true)
     }
   }
 
@@ -53,6 +66,14 @@ function SummaryPage({ selectedText }: SummaryPageProps) {
 
       <div className="bg-gray-800 rounded-lg p-3 min-h-[200px]">
         <p className="text-xs text-gray-400 mb-2">Summary</p>
+        {result && (
+          <button
+            onClick={handleSpeak}
+            className="mb-2 flex items-center gap-1 px-3 py-1 rounded-full 
+                       bg-purple-700 hover:bg-purple-600 text-white text-xs font-medium">
+            {playing ? '⏸️ Pause' : '🔊 Listen'}
+          </button>
+        )}
         <p className="text-sm text-white whitespace-pre-wrap">
           {result || 'Summary will appear here...'}
         </p>

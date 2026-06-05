@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { speakText, stopSpeech } from '../utils/speech'
 
 interface NotesPageProps {
   selectedText: string
@@ -15,8 +16,8 @@ function NotesPage({ selectedText }: NotesPageProps) {
   const [noteText, setNoteText] = useState<string>('')
   const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [playingId, setPlayingId] = useState<number | null>(null)
 
-  // Load notes from database
   const fetchNotes = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/notes')
@@ -64,6 +65,16 @@ function NotesPage({ selectedText }: NotesPageProps) {
     }
   }
 
+  const handleSpeak = (note: Note) => {
+    if (playingId === note.id) {
+      stopSpeech()
+      setPlayingId(null)
+    } else {
+      speakText(note.note_text)
+      setPlayingId(note.id)
+    }
+  }
+
   return (
     <div className="p-4 flex flex-col gap-4">
       <div className="bg-gray-800 rounded-lg p-3">
@@ -98,11 +109,19 @@ function NotesPage({ selectedText }: NotesPageProps) {
               <p className="text-xs text-blue-400">
                 {new Date(note.created_at).toLocaleDateString()}
               </p>
-              <button
-                onClick={() => handleDelete(note.id)}
-                className="text-red-400 text-xs hover:text-red-300">
-                🗑️
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleSpeak(note)}
+                  className="text-xs px-2 py-0.5 rounded-full bg-yellow-700 
+                             hover:bg-yellow-600 text-white">
+                  {playingId === note.id ? '⏸️' : '🔊'}
+                </button>
+                <button
+                  onClick={() => handleDelete(note.id)}
+                  className="text-red-400 text-xs hover:text-red-300">
+                  🗑️
+                </button>
+              </div>
             </div>
             <p className="text-xs text-gray-400 mb-1 truncate">
               📌 {note.selected_text}
