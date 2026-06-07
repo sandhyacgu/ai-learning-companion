@@ -16,13 +16,10 @@ function App() {
       try {
         chrome.runtime.sendMessage(
           { type: 'GET_SELECTED_TEXT' },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.log('Worker not ready:', chrome.runtime.lastError)
-              return
-            }
-            if (response?.text) {
-              setSelectedText(response.text)
+          (res) => {
+            if (chrome.runtime.lastError) return
+            if (res?.text) {
+              setSelectedText(res.text)
             }
           }
         )
