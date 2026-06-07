@@ -10,19 +10,30 @@ import DashboardPage from './pages/DashboardPage'
 function App() {
   const [activePage, setActivePage] = useState<Page>('explain')
   const [selectedText, setSelectedText] = useState<string>('')
+  const [isYouTube, setIsYouTube] = useState<boolean>(false)
+  const [loadingTranscript, setLoadingTranscript] = useState<boolean>(false)
 
   useEffect(() => {
     setTimeout(() => {
       try {
         chrome.runtime.sendMessage(
-          { type: 'GET_SELECTED_TEXT' },
+          { type: 'GET_TAB_INFO' },
           (response) => {
-            if (chrome.runtime.lastError) {
-              console.log('Worker not ready:', chrome.runtime.lastError)
-              return
-            }
-            if (response?.text) {
-              setSelectedText(response.text)
+            if (chrome.runtime.lastError) return
+
+            if (response?.isYouTube && response?.url) {
+              setIsYouTube(true)
+              fetchYouTubeTranscript(response.url)
+            } else {
+              chrome.runtime.sendMessage(
+                { type: 'GET_SELECTED_TEXT' },
+                (res) => {
+                  if (chrome.runtime.lastError) return
+                  if (res?.text) {
+                    setSelectedText(res.text)
+                  }
+                }
+              )
             }
           }
         )
@@ -31,6 +42,25 @@ function App() {
       }
     }, 100)
   }, [])
+
+  const fetchYouTubeTranscript = async (url: string) => {
+    setLoadingTranscript(true)
+    try {
+      const response = await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/youtube/transcript', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      })
+      const data = await response.json()
+      if (data.transcript) {
+        setSelectedText(data.transcript)
+      }
+    } catch (err) {
+      console.log('Transcript fetch error:', err)
+    } finally {
+      setLoadingTranscript(false)
+    }
+  }
 
   const renderPage = () => {
     switch (activePage) {
@@ -48,9 +78,22 @@ function App() {
         <h1 className="text-sm font-bold text-blue-400">
           AI Learning Companion 🧠
         </h1>
-        {selectedText && (
+
+        {isYouTube && (
+          <p className="text-xs text-red-400 mt-1">
+            📺 YouTube Video Detected
+          </p>
+        )}
+
+        {loadingTranscript && (
+          <p className="text-xs text-yellow-400 mt-1">
+            ⏳ Loading video transcript...
+          </p>
+        )}
+
+        {selectedText && !loadingTranscript && (
           <p className="text-xs text-gray-400 mt-1 truncate">
-            📌 "{selectedText.substring(0, 50)}..."
+            {isYouTube ? '📺' : '📌'} "{selectedText.substring(0, 50)}..."
           </p>
         )}
       </div>

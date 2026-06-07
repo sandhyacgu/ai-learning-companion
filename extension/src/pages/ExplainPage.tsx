@@ -19,7 +19,7 @@ function ExplainPage({ selectedText }: ExplainPageProps) {
     setPlaying(false)
 
     try {
-      const response = await fetch('http://localhost:8000/api/explain', {
+      const response = await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: selectedText })
