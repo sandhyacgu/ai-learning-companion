@@ -120,7 +120,7 @@ function QuizPage({ selectedText }: QuizPageProps) {
         <p className="text-sm text-white line-clamp-2">
           {selectedText
             ? isLongTranscript
-              ? '✅ Full video transcript loaded — click Generate Quiz to start'
+              ? 'click Generate Quiz to start'
               : selectedText
             : 'Select any text on a webpage to get started...'}
         </p>

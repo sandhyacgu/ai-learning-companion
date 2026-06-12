@@ -54,7 +54,7 @@ function SummaryPage({ selectedText}: SummaryPageProps) {
         <p className="text-sm text-white">
           {selectedText
             ? isLongTranscript
-              ? '✅ Full video transcript loaded — click Summarize to analyze'
+              ? 'click Summarize to analyze'
               : selectedText
             : 'Select any text on a webpage to get started...'}
         </p>
