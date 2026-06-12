@@ -21,7 +21,7 @@ function NotesPage({ selectedText}: NotesPageProps) {
 
   const fetchNotes = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/notes')
+      const response = await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/notes')
       const data = await response.json()
       setNotes(data.notes)
     } catch (err) {
@@ -39,7 +39,7 @@ function NotesPage({ selectedText}: NotesPageProps) {
     if (!noteText.trim()) return
     setLoading(true)
     try {
-      await fetch('http://localhost:8000/api/notes', {
+      await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -61,7 +61,7 @@ function NotesPage({ selectedText}: NotesPageProps) {
 
   const handleDelete = async (id: number) => {
     try {
-      await fetch(`http://localhost:8000/api/notes/${id}`, { method: 'DELETE' })
+      await fetch(`https://ai-learning-companion-1-w3hw.onrender.com/api/notes/${id}`, { method: 'DELETE' })
       fetchNotes()
     } catch (err) {
       console.log('Error deleting note:', err)

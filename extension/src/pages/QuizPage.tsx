@@ -31,7 +31,7 @@ function QuizPage({ selectedText }: QuizPageProps) {
     setShowScore(false)
 
     try {
-      const response = await fetch('http://localhost:8000/api/quiz', {
+      const response = await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: selectedText })
@@ -69,7 +69,7 @@ function QuizPage({ selectedText }: QuizPageProps) {
     setShowScore(true)
 
     try {
-      await fetch('http://localhost:8000/api/quiz/result', {
+      await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/quiz/result', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

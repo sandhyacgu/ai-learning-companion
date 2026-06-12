@@ -26,7 +26,7 @@ function App() {
             setTranscriptError('')
 
             try {
-              const response = await fetch('http://localhost:8000/api/transcript', {
+              const response = await fetch('https://ai-learning-companion-1-w3hw.onrender.com/api/transcript', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ video_url: res.url }),
