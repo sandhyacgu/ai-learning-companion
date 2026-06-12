@@ -17,3 +17,11 @@ postgres_data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Database
+backend/ai_learning.db
+
+# Unused assets
+extension/src/assets/react.svg
+extension/src/assets/vite.svg
+extension/src/assets/hero.png
